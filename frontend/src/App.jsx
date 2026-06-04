@@ -5,11 +5,22 @@ import heroImg from './assets/hero.png'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // call GET games endpoint
+  const getGames = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/games')
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching games:', error)
+    }
+  }
 
   return (
     <div id="app">
-      We playing board games
+      <button onClick={() => getGames()}>
+        We playing board games!
+      </button>
     </div>
   )
 }
