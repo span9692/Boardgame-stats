@@ -2,23 +2,22 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
+import { gamesApi } from './api'
 import './App.css'
 
 function App() {
-  // call GET games endpoint
-  const getGames = async () => {
+  const addGame = async () => {
     try {
-      const response = await fetch('http://localhost:3000/games')
-      const data = await response.json()
+      const data = await gamesApi.add('Monopoly', 'COMPETITIVE')
       console.log(data)
     } catch (error) {
-      console.error('Error fetching games:', error)
+      console.error('Error adding game:', error)
     }
   }
 
   return (
     <div id="app">
-      <button onClick={() => getGames()}>
+      <button onClick={() => addGame()}>
         We playing board games!
       </button>
     </div>

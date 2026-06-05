@@ -1,7 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const { PrismaClient } = require('@prisma/client')
 
 const app = express()
+const prisma = new PrismaClient()
 const PORT = 3000
 
 app.use(cors())
@@ -11,8 +14,28 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the Board Games API' })
 })
 
-app.get('/games', (req, res) => {
-  res.json({ message: 'games will go here' })
+app.get('/api/games', async (req, res) => {
+  try {
+    const games = await prisma.game.findMany()
+    res.json(games)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch games' })
+  }
+})
+
+app.post('/api/games', async (req, res) => {
+  const { title, gameType } = req.body
+  try {
+    const game = await prisma.game.create({
+      data: {
+        title,
+        gameType
+      }
+    })
+    res.json(game)
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to create game' })
+  }
 })
 
 app.listen(PORT, () => {
