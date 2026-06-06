@@ -38,6 +38,18 @@ app.post('/api/games', async (req, res) => {
   }
 })
 
+app.delete('/api/games/:title', async (req, res) => {
+  const { title } = req.params
+  try {
+    const game = await prisma.game.delete({
+      where: { title }
+    })
+    res.json(game)
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to delete game' })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })

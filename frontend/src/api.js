@@ -13,6 +13,13 @@ export const gamesApi = {
       body: JSON.stringify({ title, gameType })
     })
     return response.json()
+  },
+
+  remove: async (title) => {
+    const response = await fetch(`${BASE_URL}/games/${title}`, {
+      method: 'DELETE'
+    })
+    return response.json()
   }
 }
 
