@@ -29,11 +29,18 @@ export const playersApi = {
     return response.json()
   },
 
-  add: async (player) => {
+  add: async (firstName, lastName, username) => {
     const response = await fetch(`${BASE_URL}/players`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(player)
+      body: JSON.stringify({ firstName, lastName, username })
+    })
+    return response.json()
+  },
+
+  remove: async (id) => {
+    const response = await fetch(`${BASE_URL}/players/${id}`, {
+      method: 'DELETE'
     })
     return response.json()
   }

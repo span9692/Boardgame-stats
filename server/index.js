@@ -50,6 +50,44 @@ app.delete('/api/games/:title', async (req, res) => {
   }
 })
 
+app.get('/api/players', async (req, res) => {
+  try {
+    const players = await prisma.player.findMany()
+    res.json(players)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch players' })
+  }
+})
+
+app.post('/api/players', async (req, res) => {
+  const { firstName, lastName, username } = req.body
+  try {
+    const player = await prisma.player.create({
+      data: {
+        firstName,
+        lastName,
+        username,
+        passwordHash: ''
+      }
+    })
+    res.json(player)
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to create player' })
+  }
+})
+
+app.delete('/api/players/:id', async (req, res) => {
+  const { id } = req.params
+  try {
+    const player = await prisma.player.delete({
+      where: { id: parseInt(id) }
+    })
+    res.json(player)
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to delete player' })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })

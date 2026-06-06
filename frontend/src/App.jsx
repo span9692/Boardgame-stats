@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
-import { gamesApi } from './api'
+import { gamesApi, playersApi } from './api'
 import './App.css'
 
 function App() {
   const [gameList, setGameList] = useState([])
+  const [playerList, setPlayerList] = useState([])
+
+  console.log('Game list:', gameList)
+  console.log('Player list:', playerList)
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -18,6 +22,16 @@ function App() {
       }
     }
 
+    const fetchPlayers = async () => {
+      try {
+        const data = await playersApi.getAll()
+        setPlayerList(data)
+      } catch (error) {
+        console.error('Error fetching players:', error)
+      }
+    }
+
+    fetchPlayers()
     fetchGames()
   }, [])
 
@@ -40,6 +54,24 @@ function App() {
     }
   }
 
+  const addPlayer = async () => {
+    try {
+      const newPlayer = await playersApi.add('John', 'Doe', 'johndoe')
+      setPlayerList([...playerList, newPlayer])
+    } catch (error) {
+      console.error('Error adding player:', error)
+    }
+  }
+
+  const removePlayer = async () => {
+    try {
+      const data = await playersApi.remove(playerList[0].id)
+      setPlayerList(playerList.filter(player => player.id !== data.id))
+    } catch (error) {
+      console.error('Error removing player:', error)
+    }
+  }
+
   return (
     <div id="app">
       <button onClick={() => addGame()}>
@@ -47,6 +79,12 @@ function App() {
       </button>
       <button onClick={() => removeGame()}>
         Remove Monopoly!
+      </button>
+      <button onClick={() => addPlayer()}>
+        Add player
+      </button>
+      <button onClick={() => removePlayer()}>
+        Remove player
       </button>
     </div>
   )
