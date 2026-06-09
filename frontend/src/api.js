@@ -35,7 +35,11 @@ export const playersApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstName, lastName, username })
     })
-    return response.json()
+    if (response.status === 200) {
+      return response.json()
+    } else {
+      return { error: "username already exists" }
+    }
   },
 
   remove: async (id) => {

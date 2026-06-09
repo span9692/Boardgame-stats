@@ -6,10 +6,38 @@ body {
   width: 1126px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
   border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.home-main-container {
+  display: flex;
+  flex-direction: column;
+
+  .home-title {
+    color: #F0997B;
+  }
+
+  .navigation-button-container {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+
+    .navigation-button {
+      background-color: #F0997B;
+      color: #7d2e7b;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #e68a6c;
+      }
+    }
+  }
 }

@@ -1,126 +1,114 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { gamesApi, playersApi } from './api'
+import { setGames, addGame, removeGame } from './store/gameSlice'
+import { getPlayers } from './store/playerSlice'
 import './App.css'
+import PlayersPage from './components/Players/PlayersPage.jsx'
 
 function App() {
-  const [gameList, setGameList] = useState([])
-  const [playerList, setPlayerList] = useState([])
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
+    const dispatch = useDispatch()
+    const gameList = useSelector(state => state.games)
+    const playerList = useSelector(state => state.players)
+    const [pageType, setPageType] = useState('STATS')
 
-  console.log('Game list:', gameList)
-  console.log('Player list:', playerList)
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                const data = await gamesApi.getAll()
+                dispatch(setGames(data))
+            } catch (error) {
+                console.error('Error fetching games:', error)
+            }
+        }
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const data = await gamesApi.getAll()
-        setGameList(data)
-      } catch (error) {
-        console.error('Error fetching games:', error)
-      }
+        const fetchPlayers = async () => {
+            try {
+                const data = await playersApi.getAll()
+                dispatch(getPlayers(data))
+            } catch (error) {
+                console.error('Error fetching players:', error)
+            }
+        }
+
+        fetchPlayers()
+        fetchGames()
+    }, [dispatch])
+
+    const handleAddGame = async () => {
+        try {
+            const newGame = await gamesApi.add('Monopoly', 'COMPETITIVE')
+            dispatch(addGame(newGame))
+        } catch (error) {
+            console.error('Error adding game:', error)
+        }
     }
 
-    const fetchPlayers = async () => {
-      try {
-        const data = await playersApi.getAll()
-        setPlayerList(data)
-      } catch (error) {
-        console.error('Error fetching players:', error)
-      }
+    const handleRemoveGame = async () => {
+        try {
+            const data = await gamesApi.remove('Monopoly')
+            dispatch(removeGame(data.id))
+        } catch (error) {
+            console.error('Error removing game:', error)
+        }
     }
 
-    fetchPlayers()
-    fetchGames()
-  }, [])
+    return (
+        <div className="home-main-container">
+            <div className="home-title">
+                Hall of Gamers
+            </div>
+            <div className="navigation-button-container">
+                <button className="navigation-button" onClick={() => setPageType('STATS')}>
+                    Stats
+                </button>
+                <button className="navigation-button" onClick={() => setPageType('GAMES')}>
+                    Games
+                </button>
+                <button className="navigation-button" onClick={() => setPageType('PLAYERS')}>
+                    Players
+                </button>
+            </div>
+
+            {pageType === 'STATS' && (
+                <div className="stats-page-container">
+                    <h2>Statistics</h2>
+                    <p>Here are some cool stats!</p>
+                </div>
+            )}
+
+            {pageType === 'GAMES' && (
+                <div className="games-page-container">
+                    <h2>Games</h2>
+                    <p>Here are all the games!</p>
+                </div>
+            )}
+
+            {pageType === 'PLAYERS' && (
+                <PlayersPage />
+            )}
 
 
-  const addGame = async () => {
-    try {
-      const newGame = await gamesApi.add('Monopoly', 'COMPETITIVE')
-      setGameList([...gameList, newGame])
-    } catch (error) {
-      console.error('Error adding game:', error)
-    }
-  }
-
-  const removeGame = async () => {
-    try {
-      const data = await gamesApi.remove('Monopoly')
-      setGameList(gameList.filter(game => game.id !== data.id))
-    } catch (error) {
-      console.error('Error removing game:', error)
-    }
-  }
-
-  const addPlayer = async () => {
-    try {
-      const newPlayer = await playersApi.add(firstName, lastName, username)
-      setPlayerList([...playerList, newPlayer])
-    } catch (error) {
-      console.error('Error adding player:', error)
-    }
-  }
-
-  const removePlayer = async () => {
-    try {
-      const data = await playersApi.remove(playerList[0].id)
-      setPlayerList(playerList.filter(player => player.id !== data.id))
-    } catch (error) {
-      console.error('Error removing player:', error)
-    }
-  }
-
-  return (
-    <div className="home-main-container">
-      <div>
-        <button onClick={() => addGame()}>
-          Add Monopoly!
-        </button>
-        <button onClick={() => removeGame()}>
-          Remove Monopoly!
-        </button>
-      </div>
-      <div>
-        <button onClick={() => addPlayer()}>
-          Add player
-        </button>
-        <input
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <input
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <br />
-        <button onClick={() => removePlayer()}>
-          Remove player
-        </button>
-      </div>
-      <br />
-      All Players:
-      {playerList.map(player => (
-        <div key={player.id}>{player.firstName} {player.lastName} ({player.username})</div>
-      ))}
-      <br />
-      All Games:
-      {gameList.map(game => (
-        <div key={game.id}>{game.title} ({game.gameType})</div>
-      ))}
-    </div>
-  )
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <div>
+                <button onClick={handleAddGame}>
+                    Add Monopoly!
+                </button>
+                <button onClick={handleRemoveGame}>
+                    Remove Monopoly!
+                </button>
+            </div>
+            <br />
+            All Games:
+            {gameList.map(game => (
+                <div key={game.id}>{game.title} ({game.gameType})</div>
+            ))}
+        </div>
+    )
 }
 
 export default App
