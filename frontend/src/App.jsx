@@ -8,6 +8,9 @@ import './App.css'
 function App() {
   const [gameList, setGameList] = useState([])
   const [playerList, setPlayerList] = useState([])
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
 
   console.log('Game list:', gameList)
   console.log('Player list:', playerList)
@@ -56,7 +59,7 @@ function App() {
 
   const addPlayer = async () => {
     try {
-      const newPlayer = await playersApi.add('John', 'Doe', 'johndoe')
+      const newPlayer = await playersApi.add(firstName, lastName, username)
       setPlayerList([...playerList, newPlayer])
     } catch (error) {
       console.error('Error adding player:', error)
@@ -73,19 +76,49 @@ function App() {
   }
 
   return (
-    <div id="app">
-      <button onClick={() => addGame()}>
-        Add Monopoly!
-      </button>
-      <button onClick={() => removeGame()}>
-        Remove Monopoly!
-      </button>
-      <button onClick={() => addPlayer()}>
-        Add player
-      </button>
-      <button onClick={() => removePlayer()}>
-        Remove player
-      </button>
+    <div className="home-main-container">
+      <div>
+        <button onClick={() => addGame()}>
+          Add Monopoly!
+        </button>
+        <button onClick={() => removeGame()}>
+          Remove Monopoly!
+        </button>
+      </div>
+      <div>
+        <button onClick={() => addPlayer()}>
+          Add player
+        </button>
+        <input
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <input
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        <input
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <br />
+        <button onClick={() => removePlayer()}>
+          Remove player
+        </button>
+      </div>
+      <br />
+      All Players:
+      {playerList.map(player => (
+        <div key={player.id}>{player.firstName} {player.lastName} ({player.username})</div>
+      ))}
+      <br />
+      All Games:
+      {gameList.map(game => (
+        <div key={game.id}>{game.title} ({game.gameType})</div>
+      ))}
     </div>
   )
 }
