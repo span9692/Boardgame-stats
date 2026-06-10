@@ -52,7 +52,9 @@ app.delete('/api/games/:title', async (req, res) => {
 
 app.get('/api/players', async (req, res) => {
   try {
-    const players = await prisma.player.findMany()
+    const players = await prisma.player.findMany({
+      where: { deletedAt: null }
+    })
     res.json(players)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch players' })
@@ -76,11 +78,29 @@ app.post('/api/players', async (req, res) => {
   }
 })
 
+app.put('/api/players/:id', async (req, res) => {
+  const { id } = req.params
+  const { firstName, lastName, username } = req.body
+  try {
+    const player = await prisma.player.update({
+      where: { id: parseInt(id) },
+      data: { firstName, lastName, username }
+    })
+    res.json(player)
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(400).json({ error: 'Username already taken' })
+    }
+    res.status(400).json({ error: 'Failed to update player' })
+  }
+})
+
 app.delete('/api/players/:id', async (req, res) => {
   const { id } = req.params
   try {
-    const player = await prisma.player.delete({
-      where: { id: parseInt(id) }
+    const player = await prisma.player.update({
+      where: { id: parseInt(id) },
+      data: { deletedAt: new Date() }
     })
     res.json(player)
   } catch (error) {

@@ -8,11 +8,17 @@ const playerSlice = createSlice({
     addPlayer: (state, action) => {
       state.push(action.payload)
     },
+    updatePlayer: (state, action) => {
+      const index = state.findIndex(player => player.id === action.payload.id)
+      if (index !== -1) {
+        state[index] = action.payload
+      }
+    },
     removePlayer: (state, action) => {
-      return state.filter(player => player.id !== action.payload)
+      return state.filter(player => player.id !== action.payload.id)
     }
   }
 })
 
-export const { getPlayers, addPlayer, removePlayer } = playerSlice.actions
+export const { getPlayers, addPlayer, removePlayer, updatePlayer } = playerSlice.actions
 export default playerSlice.reducer

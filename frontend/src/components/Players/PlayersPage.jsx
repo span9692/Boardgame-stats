@@ -4,6 +4,7 @@ import { playersApi } from '../../api.js'
 import { getPlayers, addPlayer, removePlayer } from '../../store/playerSlice.js'
 import Modal from '../Modal.jsx'
 import AddPlayerModal from './AddPlayerModal.jsx'
+import EditPlayerModal from './EditPlayerModal.jsx'
 import './PlayersPage.css'
 
 function PlayersPage() {
@@ -33,8 +34,8 @@ function PlayersPage() {
             <button onClick={() => setIsAddPlayerModalOpen(true)}>
                 Add player
             </button>
-            <button onClick={handleRemovePlayer}>
-                Remove player
+            <button onClick={() => setIsEditPlayerModalOpen(true)}>
+                Edit player
             </button>
             <br />
             <h2>Players</h2>

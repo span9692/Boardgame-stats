@@ -20,6 +20,7 @@ model Player {
   passwordHash String
   games        GamePlayer[]
   createdAt    DateTime     @default(now())
+  deletedAt    DateTime?
 }
 
 model Game {

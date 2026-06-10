@@ -35,6 +35,15 @@ export const playersApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstName, lastName, username })
     })
+    return response.json()
+  },
+
+  edit: async (id, firstName, lastName, username) => {
+    const response = await fetch(`${BASE_URL}/players/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, username })
+    })
     if (response.status === 200) {
       return response.json()
     } else {
