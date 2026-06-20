@@ -113,7 +113,30 @@ app.delete('/api/players/:id', async (req, res) => {
 })
 
 app.post('/api/sessions', async (req, res) => {
-  
+  const { gameId, outcome, players } = req.body
+  try {
+    const game = await prisma.game.findUnique({ where: { id: gameId } })
+    const isCooperative = game.gameType === 'COOPERATIVE'
+
+    const session = await prisma.gameSession.create({
+      data: {
+        gameId,
+        outcome: outcome || null,
+        players: {
+          create: players.map(p => ({
+            playerId: p.playerId,
+            roleId: p.roleId || null,
+            score: p.score ?? null,
+            placement: p.placement ?? null,
+            winner: isCooperative ? outcome === 'WIN' : p.placement === 1,
+          }))
+        }
+      }
+    })
+    res.json(session)
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to create session' })
+  }
 })
 
 app.listen(PORT, () => {

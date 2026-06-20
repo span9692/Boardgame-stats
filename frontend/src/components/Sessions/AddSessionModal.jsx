@@ -5,14 +5,24 @@ import './AddSessionModal.css'
 
 function AddSessionModal({ closeModal }) {
     const [selectedGameId, setSelectedGameId] = useState('')
+    const [outcome, setOutcome] = useState('')
     const [participants, setParticipants] = useState([])
+    const [notes, setNotes] = useState('')
     const gameList = useSelector(state => state.games)
     const playerList = useSelector(state => state.players)
 
     const selectedGame = gameList.find(g => g.id === parseInt(selectedGameId))
+    const isCooperative = selectedGame?.gameType === 'COOPERATIVE'
+    const isCompetitive = selectedGame?.gameType === 'COMPETITIVE'
+
+    const handleGameChange = (gameId) => {
+        setSelectedGameId(gameId)
+        setOutcome('')
+        setNotes('')
+    }
 
     const addParticipant = () => {
-        setParticipants([...participants, { id: Date.now(), playerId: '', roleId: '' }])
+        setParticipants([...participants, { id: Date.now(), playerId: '', roleId: '', score: '', placement: '' }])
     }
 
     const removeParticipant = (id) => {
@@ -27,12 +37,15 @@ function AddSessionModal({ closeModal }) {
         try {
             const sessionData = {
                 gameId: parseInt(selectedGameId),
+                outcome: isCooperative ? outcome || null : null,
+                notes: notes || null,
                 players: participants.map(p => ({
                     playerId: parseInt(p.playerId),
-                    roleId: parseInt(p.roleId)
+                    roleId: p.roleId ? parseInt(p.roleId) : null,
+                    score: isCompetitive && p.score !== '' ? parseInt(p.score) : null,
+                    placement: isCompetitive && p.placement !== '' ? parseInt(p.placement) : null,
                 }))
             }
-            console.log('Session data to add:', sessionData)
             const newSession = await sessionsApi.add(sessionData)
             console.log(newSession)
             closeModal()
@@ -45,13 +58,24 @@ function AddSessionModal({ closeModal }) {
         <div className="add-session-modal-container">
             <div>
                 Game
-                <select value={selectedGameId} onChange={e => setSelectedGameId(e.target.value)}>
+                <select value={selectedGameId} onChange={e => handleGameChange(e.target.value)}>
                     <option value="" disabled>Select game</option>
                     {gameList.map(game => (
                         <option key={game.id} value={game.id}>{game.title}</option>
                     ))}
                 </select>
             </div>
+
+            {isCooperative && (
+                <div>
+                    Outcome
+                    <select value={outcome} onChange={e => setOutcome(e.target.value)}>
+                        <option value="" disabled>Select outcome</option>
+                        <option value="WIN">Win</option>
+                        <option value="LOSS">Loss</option>
+                    </select>
+                </div>
+            )}
 
             <div>
                 Players
@@ -72,9 +96,35 @@ function AddSessionModal({ closeModal }) {
                                 ))}
                             </select>
                         )}
+                        {isCompetitive && (
+                            <>
+                                <input
+                                    type="number"
+                                    placeholder="Score"
+                                    value={participant.score}
+                                    onChange={e => updateParticipant(participant.id, 'score', e.target.value)}
+                                    style={{ width: '70px' }}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Place"
+                                    value={participant.placement}
+                                    onChange={e => updateParticipant(participant.id, 'placement', e.target.value)}
+                                    style={{ width: '60px' }}
+                                />
+                            </>
+                        )}
                         <button onClick={() => removeParticipant(participant.id)}>Remove</button>
                     </div>
                 ))}
+            </div>
+            <div>
+                Notes
+                <textarea
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                    placeholder="Add notes..."
+                />
             </div>
 
             <button onClick={handleAddSession}>Add</button>
