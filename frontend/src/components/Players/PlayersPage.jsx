@@ -1,14 +1,11 @@
-import { React, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { playersApi } from '../../api.js'
-import { getPlayers, addPlayer, removePlayer } from '../../store/playerSlice.js'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Modal from '../Modal.jsx'
 import AddPlayerModal from './AddPlayerModal.jsx'
 import EditPlayerModal from './EditPlayerModal.jsx'
 import './PlayersPage.css'
 
 function PlayersPage() {
-    const dispatch = useDispatch()
     const [isAddPlayerModalOpen, setIsAddPlayerModalOpen] = useState(false)
     const [isEditPlayerModalOpen, setIsEditPlayerModalOpen] = useState(false)
     const playerList = useSelector(state => state.players)
@@ -18,15 +15,6 @@ function PlayersPage() {
     }
     const closeEditPlayerModal = () => {
         setIsEditPlayerModalOpen(false)
-    }
-
-    const handleRemovePlayer = async () => {
-        try {
-            const data = await playersApi.remove(playerList[0].id)
-            dispatch(removePlayer(data.id))
-        } catch (error) {
-            console.error('Error removing player:', error)
-        }
     }
 
     return (

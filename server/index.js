@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/games', async (req, res) => {
   try {
-    const games = await prisma.game.findMany()
+    const games = await prisma.game.findMany({ include: { roles: true } })
     res.json(games)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch games' })
@@ -24,13 +24,17 @@ app.get('/api/games', async (req, res) => {
 })
 
 app.post('/api/games', async (req, res) => {
-  const { title, gameType } = req.body
+  const { title, gameType, roles } = req.body
   try {
     const game = await prisma.game.create({
       data: {
         title,
-        gameType
-      }
+        gameType,
+        ...(roles?.length && {
+          roles: { create: roles.map(name => ({ name })) }
+        })
+      },
+      include: { roles: true }
     })
     res.json(game)
   } catch (error) {
@@ -106,6 +110,10 @@ app.delete('/api/players/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'Failed to delete player' })
   }
+})
+
+app.post('/api/sessions', async (req, res) => {
+  
 })
 
 app.listen(PORT, () => {

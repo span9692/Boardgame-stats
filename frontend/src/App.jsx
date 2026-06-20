@@ -5,12 +5,13 @@ import { setGames, addGame, removeGame } from './store/gameSlice'
 import { getPlayers } from './store/playerSlice'
 import './App.css'
 import PlayersPage from './components/Players/PlayersPage.jsx'
+import GamesPage from './components/Games/GamesPage.jsx'
+import SessionsPage from './components/Sessions/SessionsPage.jsx'
 
 function App() {
     const dispatch = useDispatch()
     const gameList = useSelector(state => state.games)
-    const playerList = useSelector(state => state.players)
-    const [pageType, setPageType] = useState('STATS')
+    const [pageType, setPageType] = useState('SESSIONS')
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -59,8 +60,8 @@ function App() {
                 Hall of Gamers
             </div>
             <div className="navigation-button-container">
-                <button className="navigation-button" onClick={() => setPageType('STATS')}>
-                    Stats
+                <button className="navigation-button" onClick={() => setPageType('SESSIONS')}>
+                    Sessions
                 </button>
                 <button className="navigation-button" onClick={() => setPageType('GAMES')}>
                     Games
@@ -70,18 +71,12 @@ function App() {
                 </button>
             </div>
 
-            {pageType === 'STATS' && (
-                <div className="stats-page-container">
-                    <h2>Statistics</h2>
-                    <p>Here are some cool stats!</p>
-                </div>
+            {pageType === 'SESSIONS' && (
+                <SessionsPage />
             )}
 
             {pageType === 'GAMES' && (
-                <div className="games-page-container">
-                    <h2>Games</h2>
-                    <p>Here are all the games!</p>
-                </div>
+                <GamesPage />
             )}
 
             {pageType === 'PLAYERS' && (
