@@ -1,0 +1,22 @@
+.games-page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.game-card-title {
+  flex: 1;
+  font-weight: 600;
+}

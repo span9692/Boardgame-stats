@@ -46,6 +46,7 @@ function AddSessionModal({ closeModal }) {
                     placement: isCompetitive && p.placement !== '' ? parseInt(p.placement) : null,
                 }))
             }
+            console.log("sessionData", sessionData)
             const newSession = await sessionsApi.add(sessionData)
             console.log(newSession)
             closeModal()
@@ -79,7 +80,7 @@ function AddSessionModal({ closeModal }) {
 
             <div>
                 Players
-                <button onClick={addParticipant}>Add player</button>
+                <button className="btn-secondary" onClick={addParticipant}>Add player</button>
                 {participants.map(participant => (
                     <div key={participant.id} style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
                         <select value={participant.playerId} onChange={e => updateParticipant(participant.id, 'playerId', e.target.value)}>
@@ -114,7 +115,7 @@ function AddSessionModal({ closeModal }) {
                                 />
                             </>
                         )}
-                        <button onClick={() => removeParticipant(participant.id)}>Remove</button>
+                        <button className="btn-ghost" onClick={() => removeParticipant(participant.id)}>Remove</button>
                     </div>
                 ))}
             </div>

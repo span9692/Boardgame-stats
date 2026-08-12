@@ -54,7 +54,7 @@ function AddGameModal({ closeModal }) {
             </div>
             <div>
                 Roles (if applicable)
-                <button onClick={addRole}>Add role</button>
+                <button className="btn-secondary" onClick={addRole}>Add role</button>
                 {roles.map(role => (
                     <div key={role.id} style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
                         <input
@@ -62,7 +62,7 @@ function AddGameModal({ closeModal }) {
                             onChange={e => updateRole(role.id, e.target.value)}
                             placeholder="Role name"
                         />
-                        <button onClick={() => removeRole(role.id)}>Remove</button>
+                        <button className="btn-ghost" onClick={() => removeRole(role.id)}>Remove</button>
                     </div>
                 ))}
             </div>

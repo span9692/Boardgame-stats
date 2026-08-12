@@ -24,7 +24,7 @@ app.get('/api/games', async (req, res) => {
 })
 
 app.post('/api/games', async (req, res) => {
-  const { title, gameType, roles } = req.body
+  const { title, gameType, roles, notes } = req.body
   try {
     const game = await prisma.game.create({
       data: {
@@ -112,23 +112,50 @@ app.delete('/api/players/:id', async (req, res) => {
   }
 })
 
+app.get('/api/sessions', async (req, res) => {
+  try {
+    const sessions = await prisma.gameSession.findMany({
+      orderBy: { playedAt: 'desc' },
+      include: {
+        game: { select: { title: true, gameType: true } },
+        players: {
+          include: {
+            player: { select: { username: true } }
+          }
+        }
+      }
+    })
+    res.json(sessions)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch sessions' })
+  }
+})
+
 app.post('/api/sessions', async (req, res) => {
-  const { gameId, outcome, players } = req.body
+  const { gameId, outcome, players, notes } = req.body
   try {
     const game = await prisma.game.findUnique({ where: { id: gameId } })
     const isCooperative = game.gameType === 'COOPERATIVE'
+
+    const hasPlacement = players.some(p => p.placement != null)
+    const maxScore = !hasPlacement ? Math.max(...players.map(p => p.score ?? -Infinity)) : null
 
     const session = await prisma.gameSession.create({
       data: {
         gameId,
         outcome: outcome || null,
+        notes: notes || null,
         players: {
           create: players.map(p => ({
             playerId: p.playerId,
             roleId: p.roleId || null,
             score: p.score ?? null,
             placement: p.placement ?? null,
-            winner: isCooperative ? outcome === 'WIN' : p.placement === 1,
+            winner: isCooperative
+              ? outcome === 'WIN'
+              : hasPlacement
+                ? p.placement === 1
+                : p.score === maxScore,
           }))
         }
       }

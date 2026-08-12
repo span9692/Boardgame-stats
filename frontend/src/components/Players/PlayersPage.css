@@ -1,0 +1,11 @@
+.players-page-container {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

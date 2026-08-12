@@ -1,5 +1,11 @@
 .add-player-modal-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 340px;
+}
+
+.add-player-modal-container button {
+  align-self: flex-start;
+  margin-top: 4px;
 }

@@ -1,0 +1,36 @@
+.add-session-modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 480px;
+}
+
+.add-session-modal-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.add-session-modal-container input,
+.add-session-modal-container select,
+.add-session-modal-container textarea,
+.add-session-modal-container button {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.add-session-modal-container button {
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.add-session-modal-container textarea {
+  width: 100%;
+}

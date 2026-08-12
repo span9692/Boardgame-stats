@@ -77,12 +77,14 @@ function EditPlayerModal({ closeModal }) {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <button onClick={() => handleSavePlayer()}>
-                        Save
-                    </button>
-                    <button onClick={() => handleDeletePlayer()}>
-                        Delete
-                    </button>
+                    <div className="edit-player-modal-actions">
+                        <button onClick={() => handleSavePlayer()}>
+                            Save
+                        </button>
+                        <button className="btn-danger" onClick={() => handleDeletePlayer()}>
+                            Delete
+                        </button>
+                    </div>
                 </>
             )}
         </div>

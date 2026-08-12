@@ -19,17 +19,22 @@ function PlayersPage() {
 
     return (
         <div className="players-page-container">
-            <button onClick={() => setIsAddPlayerModalOpen(true)}>
-                Add player
-            </button>
-            <button onClick={() => setIsEditPlayerModalOpen(true)}>
-                Edit player
-            </button>
-            <br />
-            <h2>Players</h2>
-            {playerList.map(player => (
-                <div key={player.id}>{player.firstName} {player.lastName} ({player.username})</div>
-            ))}
+            <div className="page-header">
+                <h2>Players</h2>
+                <div className="page-header-actions">
+                    <button onClick={() => setIsAddPlayerModalOpen(true)}>
+                        Add player
+                    </button>
+                    <button className="btn-secondary" onClick={() => setIsEditPlayerModalOpen(true)}>
+                        Edit player
+                    </button>
+                </div>
+            </div>
+            <div className="players-list">
+                {playerList.map(player => (
+                    <div key={player.id} className="list-item">{player.firstName} {player.lastName} ({player.username})</div>
+                ))}
+            </div>
             <Modal isOpen={isAddPlayerModalOpen} onClose={() => setIsAddPlayerModalOpen(false)} title="Add Player" children={<AddPlayerModal closeModal={closeAddPlayerModal} />} />
             <Modal isOpen={isEditPlayerModalOpen} onClose={() => setIsEditPlayerModalOpen(false)} title="Edit Player" children={<EditPlayerModal closeModal={closeEditPlayerModal} />} />
         </div>
