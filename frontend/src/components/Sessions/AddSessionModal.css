@@ -28,9 +28,33 @@
 
 .add-session-modal-container button {
   font-weight: 600;
+}
+
+.add-session-modal-container > div > button,
+.add-session-modal-container > button {
   align-self: flex-start;
 }
 
 .add-session-modal-container textarea {
   width: 100%;
+}
+
+.participant-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.participant-number-input {
+  width: 70px;
+  flex-shrink: 0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.participant-number-input::-webkit-outer-spin-button,
+.participant-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

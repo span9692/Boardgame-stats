@@ -4,6 +4,21 @@
   padding: 24px 0;
 }
 
+.sessions-search {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.sessions-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  padding: 32px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
 .sessions-page-container table {
   width: 100%;
   border-collapse: collapse;

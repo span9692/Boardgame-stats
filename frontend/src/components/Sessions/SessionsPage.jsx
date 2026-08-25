@@ -12,7 +12,16 @@ function SessionsPage() {
     const [selectedSession, setSelectedSession] = useState(null)
     const [sessions, setSessions] = useState([])
     const [refreshKey, setRefreshKey] = useState(0)
+    const [filterQuery, setGameFilter] = useState('')
     const gameList = useSelector(state => state.games)
+
+    const filteredSessions = sessions.filter(session => {
+        const query = filterQuery.trim().toLowerCase()
+        return (
+            session.game.title.toLowerCase().includes(query) ||
+            session.players.some(p => p.player.username.toLowerCase().includes(query))
+        )
+    })
 
     useEffect(() => {
         const load = async () => {
@@ -49,33 +58,49 @@ function SessionsPage() {
                 </button>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Game</th>
-                        <th>Players</th>
-                        <th>Result</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sessions.map(session => {
-                        const iconUrl = gameList.find(g => g.id === session.gameId)?.iconUrl
-                        const result = getResult(session)
-                        return (
-                            <tr key={session.id} onClick={() => setSelectedSession(session)}>
-                                <td>
-                                    <GameIcon title={session.game.title} iconUrl={iconUrl} size="sm" />
-                                    {session.game.title}
-                                </td>
-                                <td>{session.players.map(p => p.player.username).join(', ')}</td>
-                                <td>{result !== '—' ? `🏆 ${result}` : '—'}</td>
-                                <td>{new Date(session.playedAt).toLocaleDateString()}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <input
+                className="sessions-search"
+                type="text"
+                placeholder="Filter by game or player..."
+                value={filterQuery}
+                onChange={e => setGameFilter(e.target.value)}
+            />
+
+            {filteredSessions.length === 0 && (
+                <div className="sessions-empty">
+                    {filterQuery.trim() ? `No sessions found for "${filterQuery}".` : 'No sessions recorded yet.'}
+                </div>
+            )}
+
+            {filteredSessions.length > 0 && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Game</th>
+                            <th>Players</th>
+                            <th>Result</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredSessions.map(session => {
+                            const iconUrl = gameList.find(g => g.id === session.gameId)?.iconUrl
+                            const result = getResult(session)
+                            return (
+                                <tr key={session.id} onClick={() => setSelectedSession(session)}>
+                                    <td>
+                                        <GameIcon title={session.game.title} iconUrl={iconUrl} size="sm" />
+                                        {session.game.title}
+                                    </td>
+                                    <td>{session.players.map(p => p.player.username).join(', ')}</td>
+                                    <td>{result !== '—' ? `🏆 ${result}` : '—'}</td>
+                                    <td>{new Date(session.playedAt).toLocaleDateString()}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            )}
 
             <Modal isOpen={isAddSessionModalOpen} onClose={() => setIsAddSessionModalOpen(false)} title="Add Session" children={<AddSessionModal closeModal={closeAddSessionModal} />} />
             <Modal isOpen={!!selectedSession} onClose={() => setSelectedSession(null)} title="Session Details" children={selectedSession && <SessionDetailModal session={selectedSession} />} />

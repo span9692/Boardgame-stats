@@ -14,6 +14,22 @@ function AddSessionModal({ closeModal }) {
     const selectedGame = gameList.find(g => g.id === parseInt(selectedGameId))
     const isCooperative = selectedGame?.gameType === 'COOPERATIVE'
     const isCompetitive = selectedGame?.gameType === 'COMPETITIVE'
+    const hasRoles = selectedGame?.roles?.length > 0
+
+    const hasAnyScore = participants.some(p => p.score !== '')
+    const allHaveScore = participants.every(p => p.score !== '')
+    const hasAnyPlacement = participants.some(p => p.placement !== '')
+    const allHavePlacement = participants.every(p => p.placement !== '')
+
+    const isAddDisabled = (
+        !selectedGameId ||
+        (isCompetitive && participants.length < 2) ||
+        (isCompetitive && participants.some(p => p.score === '' && p.placement === '')) ||
+        (isCompetitive && hasAnyScore && !allHaveScore) ||
+        (isCompetitive && hasAnyPlacement && !allHavePlacement) ||
+        (isCooperative && !outcome) ||
+        (hasRoles && participants.some(p => !p.roleId))
+    )
 
     const handleGameChange = (gameId) => {
         setSelectedGameId(gameId)
@@ -82,7 +98,7 @@ function AddSessionModal({ closeModal }) {
                 Players
                 <button className="btn-secondary" onClick={addParticipant}>Add player</button>
                 {participants.map(participant => (
-                    <div key={participant.id} style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                    <div key={participant.id} className="participant-row">
                         <select value={participant.playerId} onChange={e => updateParticipant(participant.id, 'playerId', e.target.value)}>
                             <option value="" disabled>Select player</option>
                             {playerList.map(player => (
@@ -102,16 +118,16 @@ function AddSessionModal({ closeModal }) {
                                 <input
                                     type="number"
                                     placeholder="Score"
+                                    className="participant-number-input"
                                     value={participant.score}
                                     onChange={e => updateParticipant(participant.id, 'score', e.target.value)}
-                                    style={{ width: '70px' }}
                                 />
                                 <input
                                     type="number"
                                     placeholder="Place"
+                                    className="participant-number-input"
                                     value={participant.placement}
                                     onChange={e => updateParticipant(participant.id, 'placement', e.target.value)}
-                                    style={{ width: '60px' }}
                                 />
                             </>
                         )}
@@ -128,7 +144,7 @@ function AddSessionModal({ closeModal }) {
                 />
             </div>
 
-            <button onClick={handleAddSession}>Add</button>
+            <button onClick={handleAddSession} disabled={isAddDisabled}>Add</button>
         </div>
     )
 }
