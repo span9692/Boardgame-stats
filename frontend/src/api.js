@@ -67,6 +67,13 @@ export const playersApi = {
   }
 }
 
+export const bggApi = {
+  search: async (query) => {
+    const response = await fetch(`${BASE_URL}/bgg/search?query=${encodeURIComponent(query)}`)
+    return response.json()
+  }
+}
+
 export const sessionsApi = {
   getRecent: async () => {
     const response = await fetch(`${BASE_URL}/sessions`)

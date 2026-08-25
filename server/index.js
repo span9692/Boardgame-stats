@@ -41,6 +41,25 @@ async function findBggIcon(title) {
   return thingItem?.image || null
 }
 
+async function searchBggTitles(query) {
+  if (!process.env.BGG_API_TOKEN) return []
+
+  const bggHeaders = { Authorization: `Bearer ${process.env.BGG_API_TOKEN}` }
+  const response = await fetch(`https://boardgamegeek.com/xmlapi2/search?query=${encodeURIComponent(query)}&type=boardgame`, { headers: bggHeaders })
+  const xml = xmlParser.parse(await response.text())
+  const rawItems = xml.items?.item
+  const items = Array.isArray(rawItems) ? rawItems : rawItems ? [rawItems] : []
+
+  return items
+    .map(item => ({
+      id: item['@_id'],
+      name: item.name?.['@_value'],
+      year: item.yearpublished?.['@_value'] ?? null
+    }))
+    .filter(item => item.name)
+    .slice(0, 8)
+}
+
 async function resolveGameIcon(game) {
   if (game.iconCheckedAt) {
     return game.iconUrl
@@ -71,6 +90,19 @@ async function resolveGameIcon(game) {
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the Board Games API' })
+})
+
+app.get('/api/bgg/search', async (req, res) => {
+  const query = (req.query.query || '').trim()
+  if (query.length < 2) {
+    return res.json([])
+  }
+  try {
+    const results = await searchBggTitles(query)
+    res.json(results)
+  } catch (error) {
+    res.json([])
+  }
 })
 
 app.get('/api/games', async (req, res) => {
