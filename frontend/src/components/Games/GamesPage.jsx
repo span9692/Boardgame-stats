@@ -11,6 +11,7 @@ function GamesPage() {
     const [isAddGameModalOpen, setIsAddGameModalOpen] = useState(false)
     const [selectedGame, setSelectedGame] = useState(null)
     const gameList = useSelector(state => state.games)
+    const sortedGameList = [...gameList].sort((a, b) => a.title.localeCompare(b.title))
 
     const closeAddGameModal = () => {
         setIsAddGameModalOpen(false)
@@ -25,7 +26,7 @@ function GamesPage() {
                 </button>
             </div>
             <div className="games-list">
-                {gameList.map(game => {
+                {sortedGameList.map(game => {
                     const typeMeta = getGameTypeMeta(game.gameType)
                     return (
                         <div key={game.id} className="list-item game-card" onClick={() => setSelectedGame(game)}>

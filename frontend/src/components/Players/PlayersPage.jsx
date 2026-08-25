@@ -12,6 +12,7 @@ function PlayersPage() {
     const [isEditPlayerModalOpen, setIsEditPlayerModalOpen] = useState(false)
     const [selectedPlayer, setSelectedPlayer] = useState(null)
     const playerList = useSelector(state => state.players)
+    const sortedPlayerList = [...playerList].sort((a, b) => a.firstName.localeCompare(b.firstName))
 
     const closeAddPlayerModal = () => {
         setIsAddPlayerModalOpen(false)
@@ -34,7 +35,7 @@ function PlayersPage() {
                 </div>
             </div>
             <div className="players-list">
-                {playerList.map(player => (
+                {sortedPlayerList.map(player => (
                     <div key={player.id} className="list-item player-card" onClick={() => setSelectedPlayer(player)}>
                         <PlayerAvatar username={player.username} size="sm" />
                         <span className="player-card-name">{player.firstName} {player.lastName}</span>
