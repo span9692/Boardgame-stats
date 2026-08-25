@@ -12,15 +12,15 @@ function SessionsPage() {
     const [selectedSession, setSelectedSession] = useState(null)
     const [sessions, setSessions] = useState([])
     const [refreshKey, setRefreshKey] = useState(0)
-    const [filterQuery, setGameFilter] = useState('')
+    const [gameFilterId, setGameFilterId] = useState('')
+    const [playerFilterId, setPlayerFilterId] = useState('')
     const gameList = useSelector(state => state.games)
+    const playerList = useSelector(state => state.players)
 
     const filteredSessions = sessions.filter(session => {
-        const query = filterQuery.trim().toLowerCase()
-        return (
-            session.game.title.toLowerCase().includes(query) ||
-            session.players.some(p => p.player.username.toLowerCase().includes(query))
-        )
+        const matchesGame = !gameFilterId || session.gameId === parseInt(gameFilterId)
+        const matchesPlayer = !playerFilterId || session.players.some(p => p.playerId === parseInt(playerFilterId))
+        return matchesGame && matchesPlayer
     })
 
     useEffect(() => {
@@ -58,17 +58,31 @@ function SessionsPage() {
                 </button>
             </div>
 
-            <input
-                className="sessions-search"
-                type="text"
-                placeholder="Filter by game or player..."
-                value={filterQuery}
-                onChange={e => setGameFilter(e.target.value)}
-            />
+            <div className="sessions-filters">
+                <select value={gameFilterId} onChange={e => setGameFilterId(e.target.value)}>
+                    <option value="">All games</option>
+                    {gameList.map(game => (
+                        <option key={game.id} value={game.id}>{game.title}</option>
+                    ))}
+                </select>
+                <select value={playerFilterId} onChange={e => setPlayerFilterId(e.target.value)}>
+                    <option value="">All players</option>
+                    {playerList.map(player => (
+                        <option key={player.id} value={player.id}>{player.username}</option>
+                    ))}
+                </select>
+                <button
+                    className="btn-secondary"
+                    disabled={!gameFilterId && !playerFilterId}
+                    onClick={() => { setGameFilterId(''); setPlayerFilterId('') }}
+                >
+                    Clear filters
+                </button>
+            </div>
 
             {filteredSessions.length === 0 && (
                 <div className="sessions-empty">
-                    {filterQuery.trim() ? `No sessions found for "${filterQuery}".` : 'No sessions recorded yet.'}
+                    {gameFilterId || playerFilterId ? 'No sessions match those filters.' : 'No sessions recorded yet.'}
                 </div>
             )}
 

@@ -4,9 +4,14 @@
   padding: 24px 0;
 }
 
-.sessions-search {
-  width: 100%;
+.sessions-filters {
+  display: flex;
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+.sessions-filters select {
+  flex: 1;
 }
 
 .sessions-empty {
