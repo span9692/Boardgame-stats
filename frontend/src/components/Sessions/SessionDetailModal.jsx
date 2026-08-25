@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import GameIcon from '../GameIcon.jsx'
+import PlayerAvatar from '../PlayerAvatar.jsx'
 import { getGameTypeMeta } from '../../utils/gameTheme.js'
 import './SessionDetailModal.css'
 
@@ -38,7 +39,7 @@ function SessionDetailModal({ session }) {
                         const roleName = gameData?.roles?.find(r => r.id === p.roleId)?.name
                         return (
                             <div key={p.id} className={`player-row ${p.winner ? 'winner' : ''}`}>
-                                <span className="player-avatar">{p.player.username.charAt(0).toUpperCase()}</span>
+                                <PlayerAvatar username={p.player.username} size="md" />
                                 <span className="player-name">{p.player.username}</span>
                                 {roleName && <span className="type-badge role-badge">{roleName}</span>}
                                 {!isCooperative && p.score != null && <span className="player-stat">Score: {p.score}</span>}

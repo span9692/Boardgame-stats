@@ -9,3 +9,19 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.player-card-name {
+  font-weight: 600;
+}
+
+.player-card-username {
+  color: var(--text-muted);
+  font-size: 13px;
+}

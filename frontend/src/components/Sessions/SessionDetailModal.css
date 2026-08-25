@@ -79,20 +79,6 @@
   background: var(--accent-soft);
 }
 
-.player-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--purple-soft);
-  color: var(--purple);
-  font-weight: 700;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
 .player-name {
   font-weight: 600;
   flex: 1;

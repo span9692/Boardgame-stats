@@ -174,6 +174,61 @@ app.delete('/api/players/:id', async (req, res) => {
   }
 })
 
+app.get('/api/players/:id/stats', async (req, res) => {
+  const { id } = req.params
+  try {
+    const gamePlayers = await prisma.gamePlayer.findMany({
+      where: { playerId: parseInt(id) },
+      include: {
+        session: {
+          select: {
+            game: { select: { id: true, title: true, gameType: true, iconUrl: true, iconCheckedAt: true } }
+          }
+        }
+      }
+    })
+
+    const byGameMap = new Map()
+    for (const gp of gamePlayers) {
+      const game = gp.session.game
+      if (!byGameMap.has(game.id)) {
+        byGameMap.set(game.id, { game, sessionsPlayed: 0, wins: 0, losses: 0 })
+      }
+      const entry = byGameMap.get(game.id)
+      entry.sessionsPlayed += 1
+      if (gp.winner) entry.wins += 1
+      else entry.losses += 1
+    }
+
+    const byGame = await Promise.all(
+      Array.from(byGameMap.values()).map(async ({ game, sessionsPlayed, wins, losses }) => ({
+        gameId: game.id,
+        title: game.title,
+        gameType: game.gameType,
+        iconUrl: await resolveGameIcon(game),
+        sessionsPlayed,
+        wins,
+        losses,
+        winRate: sessionsPlayed > 0 ? wins / sessionsPlayed : 0
+      }))
+    )
+
+    const overall = byGame.reduce(
+      (acc, g) => ({
+        sessionsPlayed: acc.sessionsPlayed + g.sessionsPlayed,
+        wins: acc.wins + g.wins,
+        losses: acc.losses + g.losses
+      }),
+      { sessionsPlayed: 0, wins: 0, losses: 0 }
+    )
+    overall.winRate = overall.sessionsPlayed > 0 ? overall.wins / overall.sessionsPlayed : 0
+
+    res.json({ overall, byGame })
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch player stats' })
+  }
+})
+
 app.get('/api/sessions', async (req, res) => {
   try {
     const sessions = await prisma.gameSession.findMany({

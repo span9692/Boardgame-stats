@@ -59,6 +59,11 @@ export const playersApi = {
       method: 'DELETE'
     })
     return response.json()
+  },
+
+  getStats: async (id) => {
+    const response = await fetch(`${BASE_URL}/players/${id}/stats`)
+    return response.json()
   }
 }
 
