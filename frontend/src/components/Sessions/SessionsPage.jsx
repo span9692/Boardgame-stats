@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import Modal from '../Modal.jsx'
 import AddSessionModal from './AddSessionModal.jsx'
 import SessionDetailModal from './SessionDetailModal.jsx'
+import GameIcon from '../GameIcon.jsx'
 import { sessionsApi } from '../../api.js'
-import { getGameTheme } from '../../utils/gameTheme.js'
 import './SessionsPage.css'
 
 function SessionsPage() {
@@ -11,6 +12,7 @@ function SessionsPage() {
     const [selectedSession, setSelectedSession] = useState(null)
     const [sessions, setSessions] = useState([])
     const [refreshKey, setRefreshKey] = useState(0)
+    const gameList = useSelector(state => state.games)
 
     useEffect(() => {
         const load = async () => {
@@ -58,12 +60,12 @@ function SessionsPage() {
                 </thead>
                 <tbody>
                     {sessions.map(session => {
-                        const theme = getGameTheme(session.game.title)
+                        const iconUrl = gameList.find(g => g.id === session.gameId)?.iconUrl
                         const result = getResult(session)
                         return (
                             <tr key={session.id} onClick={() => setSelectedSession(session)}>
                                 <td>
-                                    <span className="game-icon game-icon-sm" style={{ background: theme.soft, color: theme.color }}>{theme.icon}</span>
+                                    <GameIcon title={session.game.title} iconUrl={iconUrl} size="sm" />
                                     {session.game.title}
                                 </td>
                                 <td>{session.players.map(p => p.player.username).join(', ')}</td>

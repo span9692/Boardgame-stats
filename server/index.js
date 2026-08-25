@@ -2,13 +2,72 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const { PrismaClient } = require('@prisma/client')
+const { XMLParser } = require('fast-xml-parser')
 
 const app = express()
 const prisma = new PrismaClient()
 const PORT = 3000
+const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' })
 
 app.use(cors())
 app.use(express.json())
+
+async function findSteamIcon(title) {
+  const response = await fetch(`https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(title)}&l=english&cc=US`)
+  const data = await response.json()
+  const apps = (data.items || []).filter(item => item.type === 'app')
+  const match = apps.find(item => item.name.toLowerCase() === title.toLowerCase()) || apps[0]
+  return match ? `https://cdn.akamai.steamstatic.com/steam/apps/${match.id}/header.jpg` : null
+}
+
+async function findBggIcon(title) {
+  if (!process.env.BGG_API_TOKEN) return null
+
+  const bggHeaders = { Authorization: `Bearer ${process.env.BGG_API_TOKEN}` }
+
+  const searchResponse = await fetch(`https://boardgamegeek.com/xmlapi2/search?query=${encodeURIComponent(title)}&type=boardgame`, { headers: bggHeaders })
+  const searchXml = xmlParser.parse(await searchResponse.text())
+  const rawItems = searchXml.items?.item
+  const items = Array.isArray(rawItems) ? rawItems : rawItems ? [rawItems] : []
+  if (items.length === 0) return null
+
+  const match = items.find(item => item.name?.['@_value']?.toLowerCase() === title.toLowerCase()) || items[0]
+  const id = match['@_id']
+
+  const thingResponse = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${id}`, { headers: bggHeaders })
+  const thingXml = xmlParser.parse(await thingResponse.text())
+  const rawThingItems = thingXml.items?.item
+  const thingItem = Array.isArray(rawThingItems) ? rawThingItems[0] : rawThingItems
+  return thingItem?.image || null
+}
+
+async function resolveGameIcon(game) {
+  if (game.iconCheckedAt) {
+    return game.iconUrl
+  }
+
+  let iconUrl = null
+  try {
+    iconUrl = await findSteamIcon(game.title)
+  } catch (error) {
+    iconUrl = null
+  }
+
+  if (!iconUrl) {
+    try {
+      iconUrl = await findBggIcon(game.title)
+    } catch (error) {
+      iconUrl = null
+    }
+  }
+
+  await prisma.game.update({
+    where: { id: game.id },
+    data: { iconUrl, iconCheckedAt: new Date() }
+  })
+
+  return iconUrl
+}
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the Board Games API' })
@@ -17,7 +76,10 @@ app.get('/', (req, res) => {
 app.get('/api/games', async (req, res) => {
   try {
     const games = await prisma.game.findMany({ include: { roles: true } })
-    res.json(games)
+    const gamesWithIcons = await Promise.all(
+      games.map(async game => ({ ...game, iconUrl: await resolveGameIcon(game) }))
+    )
+    res.json(gamesWithIcons)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch games' })
   }
@@ -36,7 +98,7 @@ app.post('/api/games', async (req, res) => {
       },
       include: { roles: true }
     })
-    res.json(game)
+    res.json({ ...game, iconUrl: await resolveGameIcon(game) })
   } catch (error) {
     res.status(400).json({ error: 'Failed to create game' })
   }

@@ -1,11 +1,11 @@
 import { useSelector } from 'react-redux'
-import { getGameTheme, getGameTypeMeta } from '../../utils/gameTheme.js'
+import GameIcon from '../GameIcon.jsx'
+import { getGameTypeMeta } from '../../utils/gameTheme.js'
 import './SessionDetailModal.css'
 
 function SessionDetailModal({ session }) {
     const gameList = useSelector(state => state.games)
 
-    const theme = getGameTheme(session.game.title)
     const typeMeta = getGameTypeMeta(session.game.gameType)
     const gameData = gameList.find(g => g.id === session.gameId)
     const isCooperative = session.game.gameType === 'COOPERATIVE'
@@ -13,7 +13,7 @@ function SessionDetailModal({ session }) {
     return (
         <div className="session-detail-modal-container">
             <div className="session-detail-header">
-                <span className="game-icon" style={{ background: theme.soft, color: theme.color }}>{theme.icon}</span>
+                <GameIcon title={session.game.title} iconUrl={gameData?.iconUrl} size="lg" />
                 <div>
                     <div className="session-detail-title">{session.game.title}</div>
                     <div className="session-detail-date">

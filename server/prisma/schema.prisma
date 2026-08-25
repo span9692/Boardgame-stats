@@ -24,12 +24,14 @@ model Player {
 }
 
 model Game {
-  id        Int           @id @default(autoincrement())
-  title     String        @unique
-  gameType  GameType
-  roles     Role[]
-  sessions  GameSession[]
-  createdAt DateTime      @default(now())
+  id             Int           @id @default(autoincrement())
+  title          String        @unique
+  gameType       GameType
+  roles          Role[]
+  sessions       GameSession[]
+  createdAt      DateTime      @default(now())
+  iconUrl        String?
+  iconCheckedAt  DateTime?
 }
 
 model Role {

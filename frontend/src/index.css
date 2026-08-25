@@ -156,26 +156,6 @@ textarea {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
-.game-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.game-icon-sm {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  font-size: 13px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
 .type-badge {
   display: inline-flex;
   align-items: center;
