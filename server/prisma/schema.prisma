@@ -37,14 +37,14 @@ model Game {
 model Role {
   id          Int          @id @default(autoincrement())
   name        String
-  game        Game         @relation(fields: [gameId], references: [id])
+  game        Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId      Int
   gamePlayers GamePlayer[]
 }
 
 model GameSession {
   id       Int          @id @default(autoincrement())
-  game     Game         @relation(fields: [gameId], references: [id])
+  game     Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId   Int
   outcome  Outcome?
   notes    String?
@@ -58,7 +58,7 @@ model GamePlayer {
   sessionId Int
   player    Player       @relation(fields: [playerId], references: [id])
   playerId  Int
-  role      Role?        @relation(fields: [roleId], references: [id])
+  role      Role?        @relation(fields: [roleId], references: [id], onDelete: SetNull)
   roleId    Int?
   score     Int?
   placement Int?
