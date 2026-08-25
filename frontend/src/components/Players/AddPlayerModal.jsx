@@ -10,6 +10,8 @@ function AddPlayerModal({ closeModal }) {
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
 
+    const isAddDisabled = !firstName.trim() || !lastName.trim() || !username.trim()
+
     const handleAddPlayer = async () => {
         try {
             const newPlayer = await playersApi.add(firstName, lastName, username)
@@ -42,7 +44,7 @@ function AddPlayerModal({ closeModal }) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
-            <button onClick={() => handleAddPlayer()}>
+            <button onClick={() => handleAddPlayer()} disabled={isAddDisabled}>
                 Add
             </button>
         </div>
