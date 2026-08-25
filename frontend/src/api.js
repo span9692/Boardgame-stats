@@ -23,6 +23,11 @@ export const gamesApi = {
       method: 'DELETE'
     })
     return response.json()
+  },
+
+  getStats: async (id) => {
+    const response = await fetch(`${BASE_URL}/games/${id}/stats`)
+    return response.json()
   }
 }
 

@@ -148,6 +148,42 @@ app.delete('/api/games/:title', async (req, res) => {
   }
 })
 
+app.get('/api/games/:id/stats', async (req, res) => {
+  const { id } = req.params
+  try {
+    const gameId = parseInt(id)
+    const sessionsPlayed = await prisma.gameSession.count({ where: { gameId } })
+
+    const gamePlayers = await prisma.gamePlayer.findMany({
+      where: { session: { gameId } },
+      include: { player: { select: { id: true, firstName: true, lastName: true, username: true } } }
+    })
+
+    const byPlayerMap = new Map()
+    for (const gp of gamePlayers) {
+      const p = gp.player
+      if (!byPlayerMap.has(p.id)) {
+        byPlayerMap.set(p.id, {
+          playerId: p.id,
+          firstName: p.firstName,
+          lastName: p.lastName,
+          username: p.username,
+          sessionsPlayed: 0
+        })
+      }
+      byPlayerMap.get(p.id).sessionsPlayed += 1
+    }
+
+    const topPlayers = Array.from(byPlayerMap.values())
+      .sort((a, b) => b.sessionsPlayed - a.sessionsPlayed)
+      .slice(0, 3)
+
+    res.json({ sessionsPlayed, topPlayers })
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch game stats' })
+  }
+})
+
 app.get('/api/players', async (req, res) => {
   try {
     const players = await prisma.player.findMany({

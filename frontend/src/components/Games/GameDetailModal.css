@@ -1,0 +1,108 @@
+.game-detail-modal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 420px;
+}
+
+.game-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.game-detail-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.game-detail-header .type-badge {
+  margin-left: auto;
+}
+
+.game-detail-loading {
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.game-detail-stat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 18px 8px;
+  background: var(--surface-alt);
+  border-radius: 12px;
+}
+
+.game-detail-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.game-detail-stat-label {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.game-detail-label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.game-detail-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.game-top-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-top-player-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.game-top-player-rank {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.game-top-player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  flex: 1;
+}
+
+.game-top-player-name {
+  font-weight: 600;
+}
+
+.game-top-player-username {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.game-top-player-count {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
