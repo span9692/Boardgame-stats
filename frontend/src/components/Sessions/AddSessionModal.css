@@ -30,9 +30,12 @@
   font-weight: 600;
 }
 
-.add-session-modal-container > div > button,
-.add-session-modal-container > button {
+.add-session-modal-container > div > button {
   align-self: flex-start;
+}
+
+.add-session-modal-container > button {
+  align-self: flex-end;
 }
 
 .add-session-modal-container textarea {

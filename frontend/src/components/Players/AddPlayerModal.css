@@ -5,7 +5,7 @@
   min-width: 340px;
 }
 
-.add-player-modal-container button {
-  align-self: flex-start;
+.add-player-modal-container > button {
+  align-self: flex-end;
   margin-top: 4px;
 }

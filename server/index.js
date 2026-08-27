@@ -12,14 +12,6 @@ const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: 
 app.use(cors())
 app.use(express.json())
 
-async function findSteamIcon(title) {
-  const response = await fetch(`https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(title)}&l=english&cc=US`)
-  const data = await response.json()
-  const apps = (data.items || []).filter(item => item.type === 'app')
-  const match = apps.find(item => item.name.toLowerCase() === title.toLowerCase()) || apps[0]
-  return match ? `https://cdn.akamai.steamstatic.com/steam/apps/${match.id}/header.jpg` : null
-}
-
 async function findBggIcon(title) {
   if (!process.env.BGG_API_TOKEN) return null
 
@@ -67,17 +59,9 @@ async function resolveGameIcon(game) {
 
   let iconUrl = null
   try {
-    iconUrl = await findSteamIcon(game.title)
+    iconUrl = await findBggIcon(game.title)
   } catch (error) {
     iconUrl = null
-  }
-
-  if (!iconUrl) {
-    try {
-      iconUrl = await findBggIcon(game.title)
-    } catch (error) {
-      iconUrl = null
-    }
   }
 
   await prisma.game.update({

@@ -131,6 +131,14 @@ textarea::placeholder {
   color: var(--text-muted);
 }
 
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: var(--surface-alt);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
 input:focus,
 select:focus,
 textarea:focus {

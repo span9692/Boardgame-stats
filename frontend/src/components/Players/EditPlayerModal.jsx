@@ -36,15 +36,15 @@ function EditPlayerModal({ closeModal }) {
         }
     }
 
-    const handleDeletePlayer = async () => {
-        try {
-            await playersApi.remove(playerId)
-            dispatch(removePlayer({ id: parseInt(playerId) }))
-            closeModal()
-        } catch (error) {
-            console.error('Error editing player:', error)
-        }
-    }
+    // const handleDeletePlayer = async () => {
+    //     try {
+    //         await playersApi.remove(playerId)
+    //         dispatch(removePlayer({ id: parseInt(playerId) }))
+    //         closeModal()
+    //     } catch (error) {
+    //         console.error('Error editing player:', error)
+    //     }
+    // }
 
     return (
         <div className="add-player-modal-container">
@@ -64,13 +64,13 @@ function EditPlayerModal({ closeModal }) {
                     <input
                         placeholder="First Name"
                         value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        disabled
                     />
 
                     <input
                         placeholder="Last Name"
                         value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
+                        disabled
                     />
                     <input
                         placeholder="Username"
@@ -81,9 +81,9 @@ function EditPlayerModal({ closeModal }) {
                         <button onClick={() => handleSavePlayer()}>
                             Save
                         </button>
-                        <button className="btn-danger" onClick={() => handleDeletePlayer()}>
+                        {/* <button className="btn-danger" onClick={() => handleDeletePlayer()}>
                             Delete
-                        </button>
+                        </button> */}
                     </div>
                 </>
             )}

@@ -30,6 +30,10 @@
   align-self: flex-start;
 }
 
+.add-game-modal-container > button {
+  align-self: flex-end;
+}
+
 .game-title-field {
   position: relative;
 }
