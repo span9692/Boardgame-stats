@@ -12,6 +12,13 @@
   justify-content: center;
 }
 
+.game-icon-xl {
+  width: 160px;
+  height: 160px;
+  border-radius: 16px;
+  font-size: 56px;
+}
+
 .game-icon-lg {
   width: 72px;
   height: 34px;

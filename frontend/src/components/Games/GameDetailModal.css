@@ -7,17 +7,15 @@
 
 .game-detail-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  text-align: center;
 }
 
 .game-detail-title {
   font-size: 18px;
   font-weight: 700;
-}
-
-.game-detail-header .type-badge {
-  margin-left: auto;
 }
 
 .game-detail-loading {

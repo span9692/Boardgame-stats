@@ -22,10 +22,8 @@ function GameDetailModal({ game }) {
     return (
         <div className="game-detail-modal-container">
             <div className="game-detail-header">
-                <GameIcon title={game.title} iconUrl={game.iconUrl} size="lg" />
-                <div>
-                    <div className="game-detail-title">{game.title}</div>
-                </div>
+                <GameIcon title={game.title} iconUrl={game.iconUrl} size="xl" />
+                <div className="game-detail-title">{game.title}</div>
                 <span className="type-badge" style={{ background: typeMeta.soft, color: typeMeta.color }}>{typeMeta.label}</span>
             </div>
 
