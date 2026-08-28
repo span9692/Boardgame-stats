@@ -6,7 +6,7 @@ const { XMLParser } = require('fast-xml-parser')
 
 const app = express()
 const prisma = new PrismaClient()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' })
 
 app.use(cors())
