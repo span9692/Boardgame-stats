@@ -27,11 +27,21 @@
 
 .add-game-modal-container button {
   font-weight: 600;
+}
+
+.add-game-modal-container > div > button {
   align-self: flex-start;
 }
 
 .add-game-modal-container > button {
   align-self: flex-end;
+}
+
+.role-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .game-title-field {
