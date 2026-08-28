@@ -14,6 +14,8 @@ function SessionsPage() {
     const [refreshKey, setRefreshKey] = useState(0)
     const [gameFilterId, setGameFilterId] = useState('')
     const [playerFilterId, setPlayerFilterId] = useState('')
+    const [pageSize, setPageSize] = useState(20)
+    const [currentPage, setCurrentPage] = useState(1)
     const gameList = useSelector(state => state.games)
     const playerList = useSelector(state => state.players)
 
@@ -22,6 +24,24 @@ function SessionsPage() {
         const matchesPlayer = !playerFilterId || session.players.some(p => p.playerId === parseInt(playerFilterId))
         return matchesGame && matchesPlayer
     })
+
+    const totalPages = Math.max(1, Math.ceil(filteredSessions.length / pageSize))
+
+    const filterKey = `${gameFilterId}|${playerFilterId}|${pageSize}`
+    const [prevFilterKey, setPrevFilterKey] = useState(filterKey)
+    if (filterKey !== prevFilterKey) {
+        setPrevFilterKey(filterKey)
+        setCurrentPage(1)
+    }
+
+    const safePage = Math.min(currentPage, totalPages)
+    const paginatedSessions = filteredSessions.slice((safePage - 1) * pageSize, safePage * pageSize)
+
+    const maxVisiblePages = 3
+    let pageWindowStart = Math.max(1, safePage - Math.floor(maxVisiblePages / 2))
+    const pageWindowEnd = Math.min(totalPages, pageWindowStart + maxVisiblePages - 1)
+    pageWindowStart = Math.max(1, pageWindowEnd - maxVisiblePages + 1)
+    const pageNumbers = Array.from({ length: pageWindowEnd - pageWindowStart + 1 }, (_, i) => pageWindowStart + i)
 
     useEffect(() => {
         const load = async () => {
@@ -97,7 +117,7 @@ function SessionsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredSessions.map(session => {
+                        {paginatedSessions.map(session => {
                             const iconUrl = gameList.find(g => g.id === session.gameId)?.iconUrl
                             const result = getResult(session)
                             return (
@@ -114,6 +134,48 @@ function SessionsPage() {
                         })}
                     </tbody>
                 </table>
+            )}
+
+            {filteredSessions.length > 0 && (
+                <div className="sessions-pagination">
+                    <div className="sessions-page-size">
+                        Rows per page
+                        <select value={pageSize} onChange={e => setPageSize(parseInt(e.target.value))}>
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={30}>30</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    <div className="sessions-page-controls">
+                        <button
+                            className="btn-secondary"
+                            disabled={safePage <= 1}
+                            onClick={() => setCurrentPage(safePage - 1)}
+                        >
+                            Previous
+                        </button>
+                        <div className="sessions-page-numbers">
+                            {pageNumbers.map(num => (
+                                <button
+                                    key={num}
+                                    className={num === safePage ? 'sessions-page-number' : 'sessions-page-number btn-secondary'}
+                                    onClick={() => setCurrentPage(num)}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            className="btn-secondary"
+                            disabled={safePage >= totalPages}
+                            onClick={() => setCurrentPage(safePage + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             )}
 
             <Modal isOpen={isAddSessionModalOpen} onClose={() => setIsAddSessionModalOpen(false)} title="Add Session" children={<AddSessionModal closeModal={closeAddSessionModal} />} />

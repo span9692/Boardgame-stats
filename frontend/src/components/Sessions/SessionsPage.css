@@ -1,7 +1,7 @@
 .sessions-page-container {
   display: flex;
   flex-direction: column;
-  padding: 24px 0;
+  padding: 24px 0 8px;
 }
 
 .sessions-filters {
@@ -58,4 +58,43 @@
 
 .sessions-page-container tbody tr:last-child td {
   border-bottom: none;
+}
+
+.sessions-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.sessions-page-size {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sessions-page-size select {
+  width: auto;
+  padding: 6px 32px 6px 12px;
+  background-position: right 10px center;
+}
+
+.sessions-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sessions-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sessions-page-number {
+  min-width: 36px;
+  padding: 8px 10px;
 }
