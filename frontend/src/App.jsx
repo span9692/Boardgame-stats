@@ -38,7 +38,7 @@ function App() {
     return (
         <div className="home-main-container">
             <div className="home-title">
-                Hall of Gamers
+                Meeple Metrics
             </div>
             <div className="home-subtitle">
                 Track scores, sessions, and bragging rights across your game nights 🎲
