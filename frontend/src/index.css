@@ -168,7 +168,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
   h2 {
     margin: 0;
@@ -207,14 +207,14 @@ textarea {
 
   .home-title {
     color: var(--purple);
-    font-size: 30px;
+    font-size: 33px;
     font-weight: 700;
     letter-spacing: -0.02em;
   }
 
   .home-subtitle {
     color: var(--text-muted);
-    font-size: 15px;
+    font-size: 16px;
     margin-top: 4px;
   }
 
@@ -253,15 +253,17 @@ textarea {
 @media (max-width: 640px) {
   .home-main-container {
     .home-title {
-      font-size: 24px;
+      font-size: 26px;
     }
 
     .home-subtitle {
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .navigation-button-container {
       width: 100%;
+      margin-top: 12px;
+      margin-bottom: 0;
 
       .navigation-button {
         flex: 1;
@@ -269,5 +271,20 @@ textarea {
         font-size: 13px;
       }
     }
+  }
+
+  .sessions-page-container,
+  .games-page-container,
+  .players-page-container {
+    padding-top: 4px;
+  }
+
+  .page-header h2 {
+    font-size: 20px;
+  }
+
+  .page-header button {
+    font-size: 13px;
+    padding: 8px 16px;
   }
 }

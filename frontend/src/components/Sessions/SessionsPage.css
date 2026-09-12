@@ -1,7 +1,7 @@
 .sessions-page-container {
   display: flex;
   flex-direction: column;
-  padding: 24px 0 8px;
+  padding: 16px 0 8px;
 }
 
 .sessions-filters {
