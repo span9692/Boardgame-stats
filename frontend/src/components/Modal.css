@@ -27,6 +27,23 @@
   overflow: hidden;
 }
 
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal-content {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100% - 32px);
+  }
+
+  .modal-body > * {
+    min-width: 0 !important;
+  }
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

@@ -122,13 +122,13 @@ function SessionsPage() {
                             const result = getResult(session)
                             return (
                                 <tr key={session.id} onClick={() => setSelectedSession(session)}>
-                                    <td>
+                                    <td data-label="Game">
                                         <GameIcon title={session.game.title} iconUrl={iconUrl} size="sm" />
                                         {session.game.title}
                                     </td>
-                                    <td>{session.players.map(p => p.player.username).join(', ')}</td>
-                                    <td>{result !== '—' ? `🏆 ${result}` : '—'}</td>
-                                    <td>{new Date(session.playedAt).toLocaleDateString()}</td>
+                                    <td data-label="Players">{session.players.map(p => p.player.username).join(', ')}</td>
+                                    <td data-label="Result">{result !== '—' ? `🏆 ${result}` : '—'}</td>
+                                    <td data-label="Date">{new Date(session.playedAt).toLocaleDateString()}</td>
                                 </tr>
                             )
                         })}

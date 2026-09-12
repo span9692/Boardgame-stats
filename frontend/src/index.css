@@ -41,6 +41,18 @@ body {
   padding: 40px 48px;
 }
 
+@media (max-width: 640px) {
+  #root {
+    width: 100%;
+    margin: 0 auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100svh;
+    padding: 20px 16px;
+  }
+}
+
 h1, h2, h3 {
   color: var(--text);
   font-weight: 600;
@@ -233,6 +245,28 @@ textarea {
         background: var(--surface);
         color: var(--accent);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .home-main-container {
+    .home-title {
+      font-size: 24px;
+    }
+
+    .home-subtitle {
+      font-size: 13px;
+    }
+
+    .navigation-button-container {
+      width: 100%;
+
+      .navigation-button {
+        flex: 1;
+        padding: 10px 8px;
+        font-size: 13px;
       }
     }
   }

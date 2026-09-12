@@ -40,6 +40,10 @@
   border-bottom: 1px solid var(--border);
 }
 
+.sessions-page-container td {
+  font-size: 13px;
+}
+
 .sessions-page-container th {
   background: var(--surface-alt);
   color: var(--text-muted);
@@ -97,4 +101,105 @@
 .sessions-page-number {
   min-width: 36px;
   padding: 8px 10px;
+}
+
+@media (max-width: 640px) {
+  .sessions-filters {
+    flex-direction: column;
+  }
+
+  .sessions-filters select,
+  .sessions-filters button {
+    width: 100%;
+  }
+
+  .sessions-page-container table,
+  .sessions-page-container thead,
+  .sessions-page-container tbody,
+  .sessions-page-container tr,
+  .sessions-page-container th,
+  .sessions-page-container td {
+    display: block;
+  }
+
+  .sessions-page-container {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .sessions-page-container thead {
+    display: none;
+  }
+
+  .sessions-page-container tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 14px 16px;
+  }
+
+  .sessions-page-container tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .sessions-page-container td {
+    border-bottom: none;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .sessions-page-container td::before {
+    content: attr(data-label);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .sessions-page-container td[data-label="Game"] {
+    justify-content: flex-start;
+    padding: 0 0 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .sessions-page-container td[data-label="Game"]::before {
+    content: none;
+  }
+
+  .sessions-page-container td[data-label="Game"] .game-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    font-size: 22px;
+    margin-right: 12px;
+  }
+
+  .sessions-page-container td[data-label="Players"] {
+    text-align: right;
+  }
+
+  .sessions-pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .sessions-page-size {
+    justify-content: space-between;
+  }
+
+  .sessions-page-controls {
+    justify-content: space-between;
+  }
 }
