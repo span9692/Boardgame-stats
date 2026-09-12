@@ -54,14 +54,24 @@ async function searchBggTitles(query) {
   const rawItems = xml.items?.item
   const items = Array.isArray(rawItems) ? rawItems : rawItems ? [rawItems] : []
 
-  return items
+  const results = items
     .map(item => ({
       id: item['@_id'],
       name: decodeBggEntities(item.name?.['@_value']),
       year: item.yearpublished?.['@_value'] ?? null
     }))
     .filter(item => item.name)
-    .slice(0, 8)
+    .slice(0, 20)
+
+  if (results.length === 0) return results
+
+  const thingResponse = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${results.map(r => r.id).join(',')}`, { headers: bggHeaders })
+  const thingXml = xmlParser.parse(await thingResponse.text())
+  const rawThingItems = thingXml.items?.item
+  const thingItems = Array.isArray(rawThingItems) ? rawThingItems : rawThingItems ? [rawThingItems] : []
+  const imageById = new Map(thingItems.map(t => [t['@_id'], t.thumbnail || t.image || null]))
+
+  return results.map(r => ({ ...r, imageUrl: imageById.get(r.id) || null }))
 }
 
 async function resolveGameIcon(game) {

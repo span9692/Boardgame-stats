@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { gamesApi, bggApi } from '../../api.js'
 import { addGame } from '../../store/gameSlice.js'
+import GameIcon from '../GameIcon.jsx'
 import './AddGameModal.css'
 
 function AddGameModal({ closeModal }) {
@@ -86,7 +87,8 @@ function AddGameModal({ closeModal }) {
                                 className="game-title-suggestion"
                                 onMouseDown={() => selectSuggestion(s.name)}
                             >
-                                {s.name}{s.year ? ` (${s.year})` : ''}
+                                <GameIcon title={s.name} iconUrl={s.imageUrl} size="sm" />
+                                <span className="game-title-suggestion-text">{s.name}{s.year ? ` (${s.year})` : ''}</span>
                             </div>
                         ))}
                     </div>
