@@ -12,6 +12,18 @@ const xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: 
 app.use(cors())
 app.use(express.json())
 
+function decodeBggEntities(str) {
+  if (!str) return str
+  return str
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(code))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+}
+
 async function findBggIcon(title) {
   if (!process.env.BGG_API_TOKEN) return null
 
@@ -23,7 +35,7 @@ async function findBggIcon(title) {
   const items = Array.isArray(rawItems) ? rawItems : rawItems ? [rawItems] : []
   if (items.length === 0) return null
 
-  const match = items.find(item => item.name?.['@_value']?.toLowerCase() === title.toLowerCase()) || items[0]
+  const match = items.find(item => decodeBggEntities(item.name?.['@_value'])?.toLowerCase() === title.toLowerCase()) || items[0]
   const id = match['@_id']
 
   const thingResponse = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${id}`, { headers: bggHeaders })
@@ -45,7 +57,7 @@ async function searchBggTitles(query) {
   return items
     .map(item => ({
       id: item['@_id'],
-      name: item.name?.['@_value'],
+      name: decodeBggEntities(item.name?.['@_value']),
       year: item.yearpublished?.['@_value'] ?? null
     }))
     .filter(item => item.name)
