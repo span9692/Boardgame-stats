@@ -26,3 +26,8 @@
   height: 48px;
   font-size: 20px;
 }
+
+.player-avatar-bare {
+  background: transparent;
+  font-size: 20px;
+}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import GameIcon from '../GameIcon.jsx'
-import PlayerAvatar from '../PlayerAvatar.jsx'
 import { getGameTypeMeta } from '../../utils/gameTheme.js'
 import { gamesApi } from '../../api.js'
 import './GameDetailModal.css'
@@ -45,7 +44,6 @@ function GameDetailModal({ game }) {
                             {stats.topPlayers.map((p, index) => (
                                 <div key={p.playerId} className="list-item game-top-player-row">
                                     <span className="game-top-player-rank">{RANK_MEDALS[index]}</span>
-                                    <PlayerAvatar username={p.username} size="md" />
                                     <div className="game-top-player-info">
                                         <div className="game-top-player-name">{p.firstName} {p.lastName}</div>
                                         <div className="game-top-player-username">@{p.username}</div>
