@@ -42,11 +42,77 @@
   width: 100%;
 }
 
+.players-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.score-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.score-mode-toggle label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.score-mode-toggle input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.score-mode-toggle .radio-dot {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.score-mode-toggle input[type="radio"]:checked + .radio-dot {
+  border-color: var(--accent);
+}
+
+.score-mode-toggle input[type="radio"]:checked + .radio-dot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.score-mode-toggle input[type="radio"]:focus-visible + .radio-dot {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 .participant-row {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
+}
+
+.participant-row select {
+  flex: 1;
+  min-width: 0;
 }
 
 .participant-number-input {

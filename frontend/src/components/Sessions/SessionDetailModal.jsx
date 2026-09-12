@@ -42,9 +42,16 @@ function SessionDetailModal({ session }) {
                                 <PlayerAvatar username={p.player.username} size="md" />
                                 <span className="player-name">{p.player.username}</span>
                                 {roleName && <span className="type-badge role-badge">{roleName}</span>}
-                                {!isCooperative && p.score != null && <span className="player-stat">Score: {p.score}</span>}
-                                {!isCooperative && p.placement != null && <span className="player-stat">Place: {p.placement}</span>}
-                                {p.winner && <span className="winner-tag">🏆 Winner</span>}
+                                {!isCooperative && p.score != null && (
+                                    <span className={`player-stat ${p.winner ? 'winner-stat' : ''}`}>
+                                        {p.winner && '🏆 '}Score: {p.score}
+                                    </span>
+                                )}
+                                {!isCooperative && p.placement != null && (
+                                    <span className={`player-stat ${p.winner ? 'winner-stat' : ''}`}>
+                                        {p.winner && '🏆 '}Place: {p.placement}
+                                    </span>
+                                )}
                             </div>
                         )
                     })}

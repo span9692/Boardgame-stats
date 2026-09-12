@@ -29,14 +29,18 @@
 
 @media (max-width: 640px) {
   .modal-overlay {
-    padding: 16px;
+    padding: 12px;
   }
 
   .modal-content {
     min-width: 0;
     width: 100%;
     max-width: 100%;
-    max-height: calc(100% - 32px);
+    max-height: calc(100% - 24px);
+  }
+
+  .modal-body {
+    padding: 16px 16px 20px;
   }
 
   .modal-body > * {

@@ -17,6 +17,12 @@
   cursor: pointer;
 }
 
+.game-card .game-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
 .game-card-title {
   flex: 1;
   font-weight: 600;

@@ -43,6 +43,27 @@
   padding: 14px 8px;
   background: var(--surface-alt);
   border-radius: 12px;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .player-stat-grid {
+    gap: 6px;
+  }
+
+  .player-stat-tile {
+    padding: 10px 4px;
+    gap: 2px;
+  }
+
+  .player-stat-value {
+    font-size: 16px;
+  }
+
+  .player-stat-tile-label {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
 }
 
 .player-stat-value {
@@ -83,6 +104,12 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.player-game-row .game-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
 }
 
 .player-game-info {

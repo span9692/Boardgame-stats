@@ -190,16 +190,33 @@
   }
 
   .sessions-pagination {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
+    gap: 8px;
   }
 
-  .sessions-page-size {
-    justify-content: space-between;
+  .sessions-page-size-label {
+    display: none;
+  }
+
+  .sessions-page-size select {
+    padding: 6px 26px 6px 10px;
+    font-size: 13px;
   }
 
   .sessions-page-controls {
-    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .sessions-page-controls button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .sessions-page-numbers {
+    gap: 4px;
+  }
+
+  .sessions-page-number {
+    min-width: 30px;
+    padding: 8px;
   }
 }

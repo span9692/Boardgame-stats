@@ -6,6 +6,7 @@ import './AddSessionModal.css'
 function AddSessionModal({ closeModal }) {
     const [selectedGameId, setSelectedGameId] = useState('')
     const [outcome, setOutcome] = useState('')
+    const [scoreMode, setScoreMode] = useState('SCORE')
     const [participants, setParticipants] = useState([])
     const [notes, setNotes] = useState('')
     const gameList = useSelector(state => state.games)
@@ -15,26 +16,34 @@ function AddSessionModal({ closeModal }) {
     const isCooperative = selectedGame?.gameType === 'COOPERATIVE'
     const isCompetitive = selectedGame?.gameType === 'COMPETITIVE'
     const hasRoles = selectedGame?.roles?.length > 0
+    const scoreField = scoreMode === 'SCORE' ? 'score' : 'placement'
 
-    const hasAnyScore = participants.some(p => p.score !== '')
-    const allHaveScore = participants.every(p => p.score !== '')
-    const hasAnyPlacement = participants.some(p => p.placement !== '')
-    const allHavePlacement = participants.every(p => p.placement !== '')
+    const hasAnyValue = participants.some(p => p[scoreField] !== '')
+    const allHaveValue = participants.every(p => p[scoreField] !== '')
+    const selectedPlayerIds = participants.map(p => p.playerId).filter(id => id !== '')
+    const hasDuplicatePlayers = new Set(selectedPlayerIds).size !== selectedPlayerIds.length
 
     const isAddDisabled = (
         !selectedGameId ||
         (isCompetitive && participants.length < 2) ||
-        (isCompetitive && participants.some(p => p.score === '' && p.placement === '')) ||
-        (isCompetitive && hasAnyScore && !allHaveScore) ||
-        (isCompetitive && hasAnyPlacement && !allHavePlacement) ||
+        (isCompetitive && participants.some(p => p[scoreField] === '')) ||
+        (isCompetitive && hasAnyValue && !allHaveValue) ||
         (isCooperative && !outcome) ||
-        (hasRoles && participants.some(p => !p.roleId))
+        (hasRoles && participants.some(p => !p.roleId)) ||
+        hasDuplicatePlayers
     )
 
     const handleGameChange = (gameId) => {
         setSelectedGameId(gameId)
         setOutcome('')
         setNotes('')
+        setScoreMode('SCORE')
+        setParticipants(participants.map(p => ({ ...p, score: '', placement: '' })))
+    }
+
+    const handleScoreModeChange = (mode) => {
+        setScoreMode(mode)
+        setParticipants(participants.map(p => ({ ...p, score: '', placement: '' })))
     }
 
     const addParticipant = () => {
@@ -95,7 +104,33 @@ function AddSessionModal({ closeModal }) {
             )}
 
             <div>
-                Players
+                <div className="players-field-header">
+                    Players
+                    {isCompetitive && (
+                        <div className="score-mode-toggle">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="scoreMode"
+                                    checked={scoreMode === 'SCORE'}
+                                    onChange={() => handleScoreModeChange('SCORE')}
+                                />
+                                <span className="radio-dot"></span>
+                                Score
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="scoreMode"
+                                    checked={scoreMode === 'PLACEMENT'}
+                                    onChange={() => handleScoreModeChange('PLACEMENT')}
+                                />
+                                <span className="radio-dot"></span>
+                                Placement
+                            </label>
+                        </div>
+                    )}
+                </div>
                 <button className="btn-secondary" onClick={addParticipant}>Add player</button>
                 {participants.map(participant => (
                     <div key={participant.id} className="participant-row">
@@ -114,24 +149,15 @@ function AddSessionModal({ closeModal }) {
                             </select>
                         )}
                         {isCompetitive && (
-                            <>
-                                <input
-                                    type="number"
-                                    placeholder="Score"
-                                    className="participant-number-input"
-                                    value={participant.score}
-                                    onChange={e => updateParticipant(participant.id, 'score', e.target.value)}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="Place"
-                                    className="participant-number-input"
-                                    value={participant.placement}
-                                    onChange={e => updateParticipant(participant.id, 'placement', e.target.value)}
-                                />
-                            </>
+                            <input
+                                type="number"
+                                placeholder={scoreMode === 'SCORE' ? 'Score' : 'Place'}
+                                className="participant-number-input"
+                                value={participant[scoreField]}
+                                onChange={e => updateParticipant(participant.id, scoreField, e.target.value)}
+                            />
                         )}
-                        <button className="btn-ghost" onClick={() => removeParticipant(participant.id)}>Remove</button>
+                        <button className="btn-ghost btn-danger" onClick={() => removeParticipant(participant.id)}>Remove</button>
                     </div>
                 ))}
             </div>

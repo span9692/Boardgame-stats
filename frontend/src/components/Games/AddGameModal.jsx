@@ -111,7 +111,7 @@ function AddGameModal({ closeModal }) {
                             onChange={e => updateRole(role.id, e.target.value)}
                             placeholder="Role name"
                         />
-                        <button className="btn-ghost" onClick={() => removeRole(role.id)}>Remove</button>
+                        <button className="btn-ghost btn-danger" onClick={() => removeRole(role.id)}>Remove</button>
                     </div>
                 ))}
             </div>

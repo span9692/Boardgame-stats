@@ -139,7 +139,7 @@ function SessionsPage() {
             {filteredSessions.length > 0 && (
                 <div className="sessions-pagination">
                     <div className="sessions-page-size">
-                        Rows per page
+                        <span className="sessions-page-size-label">Rows per page</span>
                         <select value={pageSize} onChange={e => setPageSize(parseInt(e.target.value))}>
                             <option value={10}>10</option>
                             <option value={20}>20</option>
