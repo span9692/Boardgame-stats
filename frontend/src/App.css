@@ -161,6 +161,50 @@
   }
 }
 
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-grow: 1;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.app-loading-dice {
+  font-size: 56px;
+  animation: app-loading-roll 1.4s ease-in-out infinite;
+}
+
+.app-loading-text {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.app-loading-subtext {
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 260px;
+  text-wrap: balance;
+}
+
+@keyframes app-loading-roll {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-18deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(0deg) scale(0.95);
+  }
+  75% {
+    transform: rotate(18deg) scale(1.05);
+  }
+}
+
 .ticks {
   position: relative;
   width: 100%;
