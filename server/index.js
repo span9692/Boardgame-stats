@@ -24,6 +24,17 @@ function decodeBggEntities(str) {
     .replace(/&amp;/g, '&')
 }
 
+async function fetchBggThingImage(id) {
+  if (!process.env.BGG_API_TOKEN) return null
+
+  const bggHeaders = { Authorization: `Bearer ${process.env.BGG_API_TOKEN}` }
+  const thingResponse = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${id}`, { headers: bggHeaders })
+  const thingXml = xmlParser.parse(await thingResponse.text())
+  const rawThingItems = thingXml.items?.item
+  const thingItem = Array.isArray(rawThingItems) ? rawThingItems[0] : rawThingItems
+  return thingItem?.image || null
+}
+
 async function findBggIcon(title) {
   if (!process.env.BGG_API_TOKEN) return null
 
@@ -36,13 +47,7 @@ async function findBggIcon(title) {
   if (items.length === 0) return null
 
   const match = items.find(item => decodeBggEntities(item.name?.['@_value'])?.toLowerCase() === title.toLowerCase()) || items[0]
-  const id = match['@_id']
-
-  const thingResponse = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${id}`, { headers: bggHeaders })
-  const thingXml = xmlParser.parse(await thingResponse.text())
-  const rawThingItems = thingXml.items?.item
-  const thingItem = Array.isArray(rawThingItems) ? rawThingItems[0] : rawThingItems
-  return thingItem?.image || null
+  return fetchBggThingImage(match['@_id'])
 }
 
 async function searchBggTitles(query) {
@@ -81,7 +86,7 @@ async function resolveGameIcon(game) {
 
   let iconUrl = null
   try {
-    iconUrl = await findBggIcon(game.title)
+    iconUrl = game.bggId ? await fetchBggThingImage(game.bggId) : await findBggIcon(game.title)
   } catch (error) {
     iconUrl = null
   }
@@ -124,12 +129,13 @@ app.get('/api/games', async (req, res) => {
 })
 
 app.post('/api/games', async (req, res) => {
-  const { title, gameType, roles, notes } = req.body
+  const { title, gameType, roles, bggId } = req.body
   try {
     const game = await prisma.game.create({
       data: {
         title,
         gameType,
+        bggId: bggId ? parseInt(bggId) : null,
         ...(roles?.length && {
           roles: { create: roles.map(name => ({ name })) }
         })

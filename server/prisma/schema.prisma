@@ -33,6 +33,7 @@ model Game {
   createdAt      DateTime      @default(now())
   iconUrl        String?
   iconCheckedAt  DateTime?
+  bggId          Int?
 }
 
 model Role {

@@ -8,6 +8,7 @@ import './AddGameModal.css'
 function AddGameModal({ closeModal }) {
     const dispatch = useDispatch()
     const [gameTitle, setGameTitle] = useState('')
+    const [selectedBggId, setSelectedBggId] = useState(null)
     const [gameType, setGameType] = useState('')
     const [roles, setRoles] = useState([])
     const [rawSuggestions, setRawSuggestions] = useState([])
@@ -37,16 +38,22 @@ function AddGameModal({ closeModal }) {
         return () => clearTimeout(timeout)
     }, [gameTitle])
 
-    const selectSuggestion = (name) => {
+    const selectSuggestion = (suggestion) => {
         skipNextSearch.current = true
-        setGameTitle(name)
+        setGameTitle(suggestion.name)
+        setSelectedBggId(suggestion.id)
         setRawSuggestions([])
         setShowSuggestions(false)
     }
 
+    const handleTitleChange = (value) => {
+        setGameTitle(value)
+        setSelectedBggId(null)
+    }
+
     const handleAddGame = async () => {
         try {
-            const newGame = await gamesApi.add(gameTitle, gameType, roles)
+            const newGame = await gamesApi.add(gameTitle, gameType, roles, selectedBggId)
             if (!newGame.error) {
                 dispatch(addGame(newGame))
                 setRoles([])
@@ -72,7 +79,7 @@ function AddGameModal({ closeModal }) {
             <div className="game-title-field">
                 Game
                 <input
-                    onChange={(e) => setGameTitle(e.target.value)}
+                    onChange={(e) => handleTitleChange(e.target.value)}
                     onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
                     value={gameTitle}
@@ -85,7 +92,7 @@ function AddGameModal({ closeModal }) {
                             <div
                                 key={s.id}
                                 className="game-title-suggestion"
-                                onMouseDown={() => selectSuggestion(s.name)}
+                                onMouseDown={() => selectSuggestion(s)}
                             >
                                 <GameIcon title={s.name} iconUrl={s.imageUrl} size="sm" />
                                 <span className="game-title-suggestion-text">{s.name}{s.year ? ` (${s.year})` : ''}</span>

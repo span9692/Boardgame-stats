@@ -6,13 +6,14 @@ export const gamesApi = {
     return response.json()
   },
 
-  add: async (title, gameType, roles) => {
+  add: async (title, gameType, roles, bggId) => {
     const response = await fetch(`${BASE_URL}/games`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        title, 
-        gameType, 
+      body: JSON.stringify({
+        title,
+        gameType,
+        bggId,
         roles: roles.map(r => r.name).filter(name => name.trim() !== '')})
     })
     return response.json()
