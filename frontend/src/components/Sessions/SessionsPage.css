@@ -44,6 +44,15 @@
   font-size: 13px;
 }
 
+.sessions-page-container td[data-label="Game"] {
+  display: flex;
+  align-items: center;
+}
+
+.session-game-date {
+  display: none;
+}
+
 .sessions-page-container th {
   background: var(--surface-alt);
   color: var(--text-muted);
@@ -128,6 +137,13 @@
     border-radius: 0;
   }
 
+  .sessions-page-container table {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+  }
+
   .sessions-page-container thead {
     display: none;
   }
@@ -183,6 +199,18 @@
     border-radius: 12px;
     font-size: 22px;
     margin-right: 12px;
+  }
+
+  .session-game-date {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .sessions-page-container td[data-label="Date"] {
+    display: none;
   }
 
   .sessions-page-container td[data-label="Players"] {

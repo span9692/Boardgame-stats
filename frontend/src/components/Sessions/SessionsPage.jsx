@@ -112,7 +112,7 @@ function SessionsPage() {
                         <tr>
                             <th>Game</th>
                             <th>Players</th>
-                            <th>Result</th>
+                            <th>Winner</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -124,10 +124,13 @@ function SessionsPage() {
                                 <tr key={session.id} onClick={() => setSelectedSession(session)}>
                                     <td data-label="Game">
                                         <GameIcon title={session.game.title} iconUrl={iconUrl} size="sm" />
-                                        {session.game.title}
+                                        <div className="session-game-text">
+                                            <div className="session-game-title">{session.game.title}</div>
+                                            <div className="session-game-date">{new Date(session.playedAt).toLocaleDateString()}</div>
+                                        </div>
                                     </td>
                                     <td data-label="Players">{session.players.map(p => p.player.username).join(', ')}</td>
-                                    <td data-label="Result">{result !== '—' ? `🏆 ${result}` : '—'}</td>
+                                    <td data-label="Winner(s)">{result !== '—' ? `🏆 ${result}` : '—'}</td>
                                     <td data-label="Date">{new Date(session.playedAt).toLocaleDateString()}</td>
                                 </tr>
                             )
